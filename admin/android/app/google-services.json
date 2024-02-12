@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1094332014212",
+    "project_id": "doctro-8e02e",
+    "storage_bucket": "doctro-8e02e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094332014212:android:b26f278e989b3e5a0c6cd1",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYQptUl717EM61d8bn8KcQtkD6h6JaSqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094332014212:android:52025be754c6a9c10c6cd1",
+        "android_client_info": {
+          "package_name": "com.example.doctro_doctor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYQptUl717EM61d8bn8KcQtkD6h6JaSqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094332014212:android:0e44e332dd1b54460c6cd1",
+        "android_client_info": {
+          "package_name": "com.example.doctro_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYQptUl717EM61d8bn8KcQtkD6h6JaSqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
