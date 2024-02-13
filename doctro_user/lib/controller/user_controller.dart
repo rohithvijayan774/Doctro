@@ -6,6 +6,8 @@ import 'package:doctro_user/views/more_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 
 class UserController extends ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -127,7 +129,8 @@ class UserController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Login Failed : $e')));
     }
   }
 
@@ -147,10 +150,61 @@ class UserController extends ChangeNotifier {
             userAddress: snapshot['userAddress'],
             userGender: snapshot['userGender']);
         _userid = userModel.userid;
+        final ggg = TextEditingController(text: userModel.userName);
+        updateNameController.text = userModel.userName;
+        updateDOBController.text = userModel.userDOB;
+        updateNumberController.text = userModel.userNumber.toString();
+        updateAddressController.text = userModel.userAddress;
+        updateGenderController.text = userModel.userGender;
       });
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Fetching Data Failed : $e')));
+    }
+  }
+
+  final updateProKey = GlobalKey<FormState>();
+  TextEditingController updateNameController = TextEditingController();
+  TextEditingController updateDOBController = TextEditingController();
+  TextEditingController updateNumberController = TextEditingController();
+  TextEditingController updateAddressController = TextEditingController();
+  TextEditingController updateGenderController = TextEditingController();
+
+  Future updateProfile(String userName, String userDOB, int userNumber,
+      String userAddress, String userGender, context) async {
+    try {
+      DocumentReference docRef = firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth.currentUser!.uid);
+      await docRef.update({
+        'userName': userName,
+        'userDOB': userDOB,
+        'userNumber': userNumber,
+        'userAddress': userAddress,
+        'userGender': userGender,
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Your Profile updated')));
+      notifyListeners();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Updating Profile Failed : $e')));
+    }
+  }
+
+  Future<void> selectDate(
+    context,
+    TextEditingController dateController,
+  ) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1800),
+        lastDate: DateTime(2100));
+
+    if (picked != null) {
+      // selectedDate = picked;
+      dateController.text = DateFormat('dd/MM/yyyy').format(picked);
     }
   }
 }

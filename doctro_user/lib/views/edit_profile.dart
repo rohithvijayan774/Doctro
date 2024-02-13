@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:doctro_user/controller/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MoreDetails extends StatelessWidget {
-  const MoreDetails({super.key});
+class EditProfile extends StatelessWidget {
+  const EditProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final moreDetController =
-        Provider.of<UserController>(context, listen: false);
+    final updateProController = Provider.of<UserController>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,13 +15,13 @@ class MoreDetails extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: moreDetController.moredetKey,
+          key: updateProController.updateProKey,
           child: Column(
             children: [
               const Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Center(
-                  child: Text("More About You !",
+                  child: Text("Edit your Profile !",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
                 ),
@@ -33,7 +30,7 @@ class MoreDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, left: 22, right: 22),
                 child: Center(
                     child: TextFormField(
-                  controller: moreDetController.usernameController,
+                  controller: updateProController.updateNameController,
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -57,12 +54,13 @@ class MoreDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, left: 22, right: 22),
                 child: Center(
                     child: TextFormField(
-                  readOnly: true,
+                  readOnly: true
+                  ,
                   onTap: () {
-                    moreDetController.selectDate(
-                        context, moreDetController.userDOBController);
+                    updateProController.selectDate(
+                        context, updateProController.updateDOBController);
                   },
-                  controller: moreDetController.userDOBController,
+                  controller: updateProController.updateDOBController,
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -87,7 +85,7 @@ class MoreDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, left: 22, right: 22),
                 child: Center(
                     child: TextFormField(
-                  controller: moreDetController.userphoneController,
+                  controller: updateProController.updateNumberController,
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -111,7 +109,7 @@ class MoreDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, left: 22, right: 22),
                 child: Center(
                     child: TextFormField(
-                  controller: moreDetController.useraddressController,
+                  controller: updateProController.updateAddressController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return ("Address required");
@@ -133,7 +131,7 @@ class MoreDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30, left: 22, right: 22),
                 child: Center(
                     child: TextFormField(
-                  controller: moreDetController.usergenderController,
+                  controller: updateProController.updateGenderController,
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -161,18 +159,31 @@ class MoreDetails extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 30),
                     child: TextButton(
                         onPressed: () {
-                          if (moreDetController.moredetKey.currentState!
+                          if (updateProController.updateProKey.currentState!
                               .validate()) {
-                            moreDetController.createAccount(
-                                moreDetController.userid,
-                                moreDetController.usernameController.text,
-                                moreDetController.userEmail,
-                                moreDetController.userDOBController.text,
-                                int.parse(
-                                    moreDetController.userphoneController.text),
-                                moreDetController.useraddressController.text,
-                                moreDetController.usergenderController.text,
-                                context);
+                            updateProController
+                                .updateProfile(
+                                  updateProController.updateNameController.text,
+                                  updateProController.updateDOBController.text,
+                                  int.parse(updateProController
+                                      .updateNumberController.text),
+                                  updateProController
+                                      .updateAddressController.text,
+                                  updateProController
+                                      .updateGenderController.text,
+                                  context,
+                                )
+                                .then((value) => Navigator.of(context).pop());
+                            // updateProController.createAccount(
+                            //     updateProController.userid,
+                            //     updateProController.usernameController.text,
+                            //     updateProController.userEmail,
+                            //     updateProController.userDOBController.text,
+                            //     int.parse(
+                            //         updateProController.userphoneController.text),
+                            //     updateProController.useraddressController.text,
+                            //     updateProController.usergenderController.text,
+                            //     context);
                           }
                         },
                         style: ButtonStyle(
@@ -187,7 +198,7 @@ class MoreDetails extends StatelessWidget {
                             shape: MaterialStatePropertyAll(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(45)))),
-                        child: const Text("Create Account")),
+                        child: const Text("Update Account")),
                   ),
                 ),
               )

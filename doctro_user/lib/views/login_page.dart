@@ -42,7 +42,8 @@ class LoginPage extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 50, left: 22, right: 22),
                         child: TextFormField(
-                          controller: userLoginController.usernameController,
+                          controller:
+                              userLoginController.loginUsernameController,
                           //validation
                           validator: (value) {
                             if (value == null ||
@@ -71,7 +72,7 @@ class LoginPage extends StatelessWidget {
                             const EdgeInsets.only(top: 30, left: 22, right: 22),
                         child: TextFormField(
                           controller:
-                              userLoginController.userpasswordController,
+                              userLoginController.loginUserPasswordController,
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
@@ -121,9 +122,10 @@ class LoginPage extends StatelessWidget {
                             if (userLoginController.loginKey.currentState!
                                 .validate()) {
                               userLoginController.userLogin(
-                                  userLoginController.usernameController.text,
                                   userLoginController
-                                      .userpasswordController.text,
+                                      .loginUsernameController.text,
+                                  userLoginController
+                                      .loginUserPasswordController.text,
                                   context);
                             } else {
                               log("not validated");

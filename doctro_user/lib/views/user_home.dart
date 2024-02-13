@@ -16,7 +16,6 @@ class _UserHomeState extends State<UserHome> {
     final hieght = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      
       body: Consumer<UserController>(builder: (context, userHomeController, _) {
         return FutureBuilder(
             future: userHomeController.fetchUserData(context),
@@ -55,8 +54,8 @@ class _UserHomeState extends State<UserHome> {
                                     height: 20,
                                   ),
                                   Text(
-                                    'Username',
-                                    style: TextStyle(
+                                    userHomeController.userModel.userName,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),
