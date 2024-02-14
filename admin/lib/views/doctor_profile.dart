@@ -1,4 +1,4 @@
-import 'package:admin/pages/doctor_list.dart';
+import 'package:admin/views/doctor_list.dart';
 import 'package:flutter/material.dart';
 
 class DoctorProfile extends StatefulWidget {

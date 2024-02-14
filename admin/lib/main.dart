@@ -1,6 +1,9 @@
-import 'package:admin/pages/Navigation.dart';
+import 'package:admin/controller/admin_controller.dart';
+import 'package:admin/views/Navigation.dart';
+import 'package:admin/views/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -18,9 +21,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: NavBar(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AdminController>(
+          create: (context) => AdminController(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(useMaterial3: true),
+        home: const LoginPage(),
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:admin/pages/doctor_list.dart';
-import 'package:admin/pages/hospital_profile.dart';
-import 'package:admin/pages/patient_list.dart';
+import 'package:admin/views/doctor_list.dart';
+import 'package:admin/views/hospital_profile.dart';
+import 'package:admin/views/patient_list.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 

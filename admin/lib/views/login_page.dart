@@ -1,6 +1,9 @@
 import 'dart:developer';
 
+import 'package:admin/controller/admin_controller.dart';
+import 'package:admin/views/Navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -8,6 +11,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginKey = GlobalKey<FormState>();
+    final adminLoginController =
+        Provider.of<AdminController>(context, listen: false);
     return Scaffold(
       // resizeToAvoidBottomInset: false,
 
@@ -36,6 +41,7 @@ class LoginPage extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 50, left: 22, right: 22),
                         child: TextFormField(
+                          controller: adminLoginController.adminemailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Email required';
@@ -59,6 +65,8 @@ class LoginPage extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 30, left: 22, right: 22),
                         child: TextFormField(
+                          controller:
+                              adminLoginController.adminpasswordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'password required';
@@ -84,7 +92,12 @@ class LoginPage extends StatelessWidget {
                         child: TextButton(
                           onPressed: () {
                             if (loginKey.currentState!.validate()) {
-                              log("validate");
+                              adminLoginController.adminLogin(
+                                  adminLoginController
+                                      .adminemailController.text,
+                                  adminLoginController
+                                      .adminpasswordController.text,
+                                  context);
                             } else {
                               log("not validate");
                             }

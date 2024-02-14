@@ -1,5 +1,5 @@
-import 'package:admin/pages/doctor_profile.dart';
-import 'package:admin/pages/enter_doctor_details.dart';
+import 'package:admin/views/doctor_profile.dart';
+import 'package:admin/views/enter_doctor_details.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

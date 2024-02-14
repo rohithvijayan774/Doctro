@@ -1,4 +1,4 @@
-import 'package:admin/pages/Navigation.dart';
+import 'package:admin/views/Navigation.dart';
 import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
