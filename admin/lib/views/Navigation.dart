@@ -16,9 +16,9 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     List pages = [
-      PatientList1(),
+     const PatientList1(),
       DoctorList(),
-      HospitalProfile(),
+    const  HospitalProfile(),
     ];
 
     return Scaffold(

@@ -1,21 +1,26 @@
 import 'package:admin/views/doctor_list.dart';
 import 'package:flutter/material.dart';
 
-class DoctorProfile extends StatefulWidget {
-  const DoctorProfile({super.key});
+class DoctorProfile extends StatelessWidget {
+  final String drName;
+  final int drAge;
+  final String drDepartment;
+  final String drDescription;
+  const DoctorProfile({
+    required this.drName,
+    required this.drAge,
+    required this.drDepartment,
+    required this.drDescription,
+    super.key,
+  });
 
-  @override
-  State<DoctorProfile> createState() => _DoctorProfileState();
-}
-
-class _DoctorProfileState extends State<DoctorProfile> {
   @override
   Widget build(BuildContext context) {
     final hieght = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Doctor profile",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -35,30 +40,31 @@ class _DoctorProfileState extends State<DoctorProfile> {
             Padding(
               padding: const EdgeInsets.only(top: 40),
               child: Container(
+                width: width * 1,
+                height: hieght * .56,
+                decoration: const ShapeDecoration(
+                  color: Color.fromARGB(42, 146, 186, 214),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50),
+                    ),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 50),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(left: 20, bottom: 10),
+                          padding: const EdgeInsets.only(left: 20, bottom: 10),
                           child: Text(
-                            "Dr.Venu Gopal",
-                            style: TextStyle(
+                            "Dr. $drName",
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20),
                           ),
-                        ),
-                      ),
-                    ),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, bottom: 5),
-                        child: Text(
-                          "Age:36",
-                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -67,15 +73,24 @@ class _DoctorProfileState extends State<DoctorProfile> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20, bottom: 5),
                         child: Text(
-                          "Department: Ortho",
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          "Age: $drAge",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, bottom: 5),
+                        child: Text(
+                          "Department: $drDepartment",
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                          "Orthopedic doctors are bone and joint specialists, treating everything from fractures and sprains to arthritis and sports injuries. They use a combination of non-surgical methods like physical therapy and medication, as well as surgery, to help patients regain mobility and live pain-free."),
+                      child: Text(drDescription),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -93,17 +108,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               minimumSize: Size(234, 48))),
                     )
                   ],
-                ),
-                width: width * 1,
-                height: hieght * .56,
-                decoration: ShapeDecoration(
-                  color: Color.fromARGB(42, 146, 186, 214),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
-                    ),
-                  ),
                 ),
               ),
             ),

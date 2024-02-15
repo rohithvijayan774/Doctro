@@ -1,18 +1,11 @@
+import 'package:admin/controller/admin_controller.dart';
 import 'package:admin/views/doctor_profile.dart';
 import 'package:admin/views/enter_doctor_details.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// ignore: must_be_immutable
-class DoctorList extends StatefulWidget {
-  DoctorList({super.key});
-  List<String> doctorsNmae = ["jyodish", "b", "c", "d", "`e", "h", "g"];
-  List<String> department = ["1", "2", "3", "4", "`5", "6", "7"];
-  @override
-  State<DoctorList> createState() => _DoctorListState();
-}
-
-class _DoctorListState extends State<DoctorList> {
-  // int _selectedIndex = 0;
+class DoctorList extends StatelessWidget {
+  const DoctorList({super.key});
   @override
   Widget build(BuildContext context) {
     final hieght = MediaQuery.of(context).size.height;
@@ -73,7 +66,7 @@ class _DoctorListState extends State<DoctorList> {
                   child: FloatingActionButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Entr_dr_dt()));
+                          builder: (context) => const EnterDrDetails()));
                     },
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -83,41 +76,77 @@ class _DoctorListState extends State<DoctorList> {
               ],
             ),
             Expanded(
-              // height: 350,
-              child: ListView.builder(
-                  itemCount: widget.doctorsNmae.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 5, right: 5),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DoctorProfile(),
-                          ));
-                        },
-                        child: Card(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                title: Text(widget.doctorsNmae[index]),
-                                subtitle: Text(widget.department[index]),
-                                leading: const CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhb_tTLAas4h8fw7zHFEm1y4iLqUtGtiMpai0NNBRH2KCOQaW3BHMpbdO0OesMtxgtY2A&usqp=CAU'),
-                                  radius: 25,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+              child: Consumer<AdminController>(
+                  builder: (context, doctorsListController, _) {
+                return FutureBuilder(
+                    future: doctorsListController.fetchDoctors(context),
+                    builder: (context, snapshot) {
+                      return snapshot.connectionState == ConnectionState.waiting
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : snapshot.hasError
+                              ? Center(
+                                  child: Text(snapshot.error.toString()),
+                                )
+                              : ListView.builder(
+                                  itemCount:
+                                      doctorsListController.doctorsList.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 5, right: 5),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => DoctorProfile(
+                                              drName: doctorsListController
+                                                  .doctorsList[index]
+                                                  .doctorName,
+                                              drAge: doctorsListController
+                                                  .doctorsList[index].doctorAge,
+                                              drDepartment:
+                                                  doctorsListController
+                                                      .doctorsList[index]
+                                                      .doctorDepartment,
+                                              drDescription:
+                                                  doctorsListController
+                                                      .doctorsList[index]
+                                                      .doctorDescription,
+                                            ),
+                                          ));
+                                        },
+                                        child: Card(
+                                          color: const Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40)),
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                title: Text(
+                                                    'Dr. ${doctorsListController.doctorsList[index].doctorName}'),
+                                                subtitle: Text(
+                                                    doctorsListController
+                                                        .doctorsList[index]
+                                                        .doctorDepartment),
+                                                leading: const CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhb_tTLAas4h8fw7zHFEm1y4iLqUtGtiMpai0NNBRH2KCOQaW3BHMpbdO0OesMtxgtY2A&usqp=CAU'),
+                                                  radius: 25,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                    });
+              }),
             )
           ],
         ),

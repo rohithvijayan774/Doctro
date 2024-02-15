@@ -1,32 +1,22 @@
+import 'package:admin/controller/admin_controller.dart';
 import 'package:admin/views/Navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// ignore: camel_case_types
-class Entr_dr_dt extends StatefulWidget {
-  const Entr_dr_dt({super.key});
+class EnterDrDetails extends StatelessWidget {
+  const EnterDrDetails({super.key});
 
-  @override
-  State<Entr_dr_dt> createState() => _Entr_dr_dtState();
-}
-
-// ignore: camel_case_types
-class _Entr_dr_dtState extends State<Entr_dr_dt> {
-  final enterKey = GlobalKey<FormState>(); //form validation
   @override
   Widget build(BuildContext context) {
+    final enterKey = GlobalKey<FormState>();
+    //form validation
+    final addDoctController = Provider.of<AdminController>(context);
     return Scaffold(
-      // appBar: AppBar(
-      //   //title
-
-      //   elevation: 0,
-      //   // title: const Text("Patient list",
-      //   // style: TextStyle(fontWeight: FontWeight.bold),),
-      // ),
       body: Column(
         children: [
-          const Column(
+          Column(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 60),
                 child: Center(
                   child: Text("Enter Doctor Details",
@@ -35,30 +25,23 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 35),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small/an-indian-young-female-doctor-isolated-on-green-ai-generated-photo.jpg'),
-                  radius: 60,
+                padding: const EdgeInsets.only(top: 35),
+                child: InkWell(
+                  onTap: () {
+                    addDoctController.selectProPic();
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: addDoctController.pickProPic == null
+                        ? const NetworkImage(
+                            'https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small/an-indian-young-female-doctor-isolated-on-green-ai-generated-photo.jpg')
+                        : FileImage(addDoctController.pickProPic!)
+                            as ImageProvider,
+                    radius: 60,
+                  ),
                 ),
               ),
             ],
           ),
-          // ListView(
-          //   prototypeItem: TextFormField(
-          //     decoration:  InputDecoration(
-          //       label: const Text("Email"),
-          //       enabledBorder: OutlineInputBorder(
-          //         borderSide:const BorderSide(width: 2),
-          //         borderRadius: BorderRadius.circular(20)
-          //       ),
-          //       focusedBorder: OutlineInputBorder(
-          //         borderSide: const BorderSide(width: 2),
-          //         borderRadius: BorderRadius.circular(20)
-          //       )
-          //     ),
-          //   )
-          // ),
           Expanded(
             child: SingleChildScrollView(
               child: Form(
@@ -69,6 +52,7 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller: addDoctController.doctorNameController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -92,6 +76,7 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller: addDoctController.doctorEmailController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -116,6 +101,8 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller:
+                            addDoctController.doctorDepartmentController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -139,6 +126,7 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller: addDoctController.doctorAgeController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -162,6 +150,7 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller: addDoctController.doctorPasswordController,
                         validator: (value) {
                           if (value == null ||
                               value.isEmpty ||
@@ -185,6 +174,7 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller: addDoctController.doctorAddressController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Address required";
@@ -207,6 +197,8 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       padding:
                           const EdgeInsets.only(top: 30, left: 22, right: 22),
                       child: TextFormField(
+                        controller:
+                            addDoctController.doctorDescriptionController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Description required";
@@ -230,12 +222,31 @@ class _Entr_dr_dtState extends State<Entr_dr_dt> {
                       child: TextButton(
                         onPressed: () {
                           if (enterKey.currentState!.validate()) {
-                            print("validated");
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const NavBar(),
-                                ),
-                                (route) => false);
+                            addDoctController
+                                .registerDoctor(
+                                    addDoctController.doctorNameController.text,
+                                    addDoctController
+                                        .doctorEmailController.text,
+                                    addDoctController
+                                        .doctorPasswordController.text,
+                                    addDoctController
+                                        .doctorDepartmentController.text,
+                                    int.parse(addDoctController
+                                        .doctorAgeController.text),
+                                    addDoctController
+                                        .doctorAddressController.text,
+                                    addDoctController
+                                        .doctorDescriptionController.text,
+                                    context)
+                                .then((value) => addDoctController.uploadPropic(
+                                    '${addDoctController.doctorModel.doctorName} ${addDoctController.doctorModel.doctorid}',
+                                    addDoctController.pickProPic!))
+                                .then((value) => Navigator.of(context).pop());
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const NavBar(),
+                            //     ),
+                            //     (route) => false);
                           } else {
                             print("not validated");
                           }

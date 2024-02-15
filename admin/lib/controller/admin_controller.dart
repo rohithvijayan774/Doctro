@@ -1,9 +1,15 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:admin/model/doctor_model.dart';
 import 'package:admin/model/user_model.dart';
 import 'package:admin/views/Navigation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AdminController extends ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -74,6 +80,149 @@ class AdminController extends ChangeNotifier {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Fetching Patients failed : $e')));
+    }
+  }
+
+  ///////////////////////////DOCTOR DETAILS/////////////////////////////////////
+
+  TextEditingController doctorNameController = TextEditingController();
+  TextEditingController doctorEmailController = TextEditingController();
+  TextEditingController doctorDepartmentController = TextEditingController();
+  TextEditingController doctorAgeController = TextEditingController();
+  TextEditingController doctorPasswordController = TextEditingController();
+  TextEditingController doctorAddressController = TextEditingController();
+  TextEditingController doctorDescriptionController = TextEditingController();
+
+  DoctorModel? _doctorModel;
+  DoctorModel get doctorModel => _doctorModel!;
+
+  Future<void> registerDoctor(
+      String doctorName,
+      String doctorEmail,
+      String doctorPassword,
+      String doctorDepartment,
+      int doctorAge,
+      String doctorAddress,
+      String doctorDescription,
+      context) async {
+    try {
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
+              email: doctorEmail, password: doctorPassword);
+      final doctorid = userCredential.user!.uid;
+      _doctorModel = DoctorModel(
+          doctorid: doctorid,
+          doctorName: doctorName,
+          doctorEmail: doctorEmail,
+          doctorDepartment: doctorDepartment,
+          doctorAge: doctorAge,
+          doctorAddress: doctorAddress,
+          doctorDescription: doctorDescription);
+
+      await firebaseFirestore
+          .collection('doctors')
+          .doc(doctorid)
+          .set(_doctorModel!.toMap());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Pasword is too weak')));
+      } else if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Email already used')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  List<DoctorModel> doctorsList = [];
+  DoctorModel? doctors;
+
+  Future fetchDoctors(context) async {
+    try {
+      doctorsList.clear();
+      CollectionReference doctorsRef = firebaseFirestore.collection('doctors');
+      QuerySnapshot doctorsSnapshot = await doctorsRef.get();
+      for (var doc in doctorsSnapshot.docs) {
+        String doctorid = doc['doctorid'];
+        String doctorName = doc['doctorName'];
+        String doctorEmail = doc['doctorEmail'];
+        String doctorDepartment = doc['doctorDepartment'];
+        int doctorAge = doc['doctorAge'];
+        String doctorAddress = doc['doctorAddress'];
+        String doctorDescription = doc['doctorDescription'];
+        String doctorProPic = doc['doctorProPic'] ?? '';
+
+        doctors = DoctorModel(
+            doctorid: doctorid,
+            doctorName: doctorName,
+            doctorEmail: doctorEmail,
+            doctorDepartment: doctorDepartment,
+            doctorAge: doctorAge,
+            doctorAddress: doctorAddress,
+            doctorDescription: doctorDescription,
+            doctorProPic: doctorProPic);
+
+        doctorsList.add(doctors!);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fetching Patients failed : $e')));
+    }
+  }
+
+  File? pickProPic;
+
+  Future<File> selectProPic() async {
+    try {
+      final pickedPic =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedPic != null) {
+        pickProPic = File(pickedPic.path);
+      }
+    } catch (e) {
+      print('Image select failed : $e');
+    }
+    notifyListeners();
+    return pickProPic!;
+  }
+
+  Future<String> storeImagetoStorge(String ref, File file) async {
+    SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+    UploadTask uploadTask =
+        firebaseStorage.ref().child(ref).putFile(file, metadata);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadURL = await snapshot.ref.getDownloadURL();
+    log(downloadURL);
+    notifyListeners();
+    return downloadURL;
+  }
+
+  uploadPropic(String picName, File proPic) async {
+    await storeImagetoStorge('Doctors Profile Pics/$picName/', proPic)
+        .then((value) async {
+      doctorModel.doctorProPic = value;
+
+      DocumentReference docRef =
+          firebaseFirestore.collection('doctors').doc(doctorModel.doctorid);
+      await docRef.update({'doctorProPic': value});
+    });
+    _doctorModel = doctorModel;
+    notifyListeners();
+  }
+
+  Future<void> deleteDoctor(String doctorID) async {
+    try {} catch (e) {
+      print(e);
     }
   }
 }
