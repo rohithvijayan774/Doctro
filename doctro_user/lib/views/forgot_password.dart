@@ -1,4 +1,6 @@
+import 'package:doctro_user/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPage extends StatelessWidget {
   const ForgotPage({super.key});
@@ -6,6 +8,7 @@ class ForgotPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final forgotKey = GlobalKey<FormState>();
+    final forgotPassController = Provider.of<UserController>(context);
     return Scaffold(
       // resizeToAvoidBottomInset: false,
 
@@ -34,6 +37,8 @@ class ForgotPage extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 50, left: 22, right: 22),
                         child: TextFormField(
+                          controller:
+                              forgotPassController.loginUsernameController,
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
@@ -56,31 +61,31 @@ class ForgotPage extends StatelessWidget {
                         ),
                       ),
 
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 30, left: 22, right: 22),
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !RegExp(r'^.{6,}$').hasMatch(value)) {
-                              return "New Password required";
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                              label: const Text("New password"),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 2),
-                                  borderRadius: BorderRadius.circular(20))),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding:
+                      //       const EdgeInsets.only(top: 30, left: 22, right: 22),
+                      //   child: TextFormField(
+                      //     validator: (value) {
+                      //       if (value == null ||
+                      //           value.isEmpty ||
+                      //           !RegExp(r'^.{6,}$').hasMatch(value)) {
+                      //         return "New Password required";
+                      //       } else {
+                      //         return null;
+                      //       }
+                      //     },
+                      //     decoration: InputDecoration(
+                      //         label: const Text("New password"),
+                      //         enabledBorder: OutlineInputBorder(
+                      //           borderSide: const BorderSide(
+                      //               color: Colors.black, width: 2),
+                      //           borderRadius: BorderRadius.circular(20),
+                      //         ),
+                      //         focusedBorder: OutlineInputBorder(
+                      //             borderSide: const BorderSide(width: 2),
+                      //             borderRadius: BorderRadius.circular(20))),
+                      //   ),
+                      // ),
                       // Padding(
                       //   padding: const EdgeInsets.only(right: 12),
                       //   child: Align(
@@ -103,7 +108,9 @@ class ForgotPage extends StatelessWidget {
                         child: TextButton(
                           onPressed: () {
                             if (forgotKey.currentState!.validate()) {
-                              print("validated");
+                              forgotPassController.forgotPassword(
+                                  forgotPassController.loginUsernameController,
+                                  context);
                             } else {
                               print("not validated");
                             }

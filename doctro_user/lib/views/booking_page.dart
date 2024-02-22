@@ -26,22 +26,22 @@ class _BookingPageState extends State<BookingPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back_ios_new_rounded)),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded)),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             backgroundImage: NetworkImage(
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhb_tTLAas4h8fw7zHFEm1y4iLqUtGtiMpai0NNBRH2KCOQaW3BHMpbdO0OesMtxgtY2A&usqp=CAU'),
             radius: 40,
           ),
-          Text("Dr name "),
+          const Text("Dr name "),
           Expanded(
             child: Container(
               width: width,
-              padding: EdgeInsets.only(left: 30, right: 30),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(50),
@@ -53,8 +53,8 @@ class _BookingPageState extends State<BookingPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
+                      const Padding(
+                        padding: EdgeInsets.only(
                           top: 30,
                         ),
                         child: Text(
@@ -77,7 +77,7 @@ class _BookingPageState extends State<BookingPage> {
 
                               print(result);
                             },
-                            icon: Icon(Icons.calendar_month)),
+                            icon: const Icon(Icons.calendar_month)),
                       ),
                     ],
                   ),
@@ -95,10 +95,10 @@ class _BookingPageState extends State<BookingPage> {
                                 width: width,
                                 height: hieght * .23,
                                 child: GridView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: 8,
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                           childAspectRatio: 1,
                                           crossAxisSpacing: 30,
                                           mainAxisSpacing: 30,
@@ -110,7 +110,7 @@ class _BookingPageState extends State<BookingPage> {
                                         onTap: () {},
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: Color.fromRGBO(
+                                              color: const Color.fromRGBO(
                                                   116, 151, 207, 0.525),
                                               borderRadius:
                                                   BorderRadius.circular(15)),
@@ -140,7 +140,7 @@ class _BookingPageState extends State<BookingPage> {
               child: Center(
                   child: ElevatedButton(
                 onPressed: () {},
-                child: Text("Book"),
+                child: const Text("Book"),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.blue),
                     foregroundColor: MaterialStateProperty.all(Colors.white)),

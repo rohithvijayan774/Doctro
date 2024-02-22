@@ -104,14 +104,14 @@ class LoginPage extends StatelessWidget {
                           },
                           style: ButtonStyle(
                               minimumSize:
-                                  MaterialStateProperty.all(Size(300, 50)),
+                                  MaterialStateProperty.all(const Size(300, 50)),
                               textStyle: MaterialStateProperty.all(
                                   const TextStyle(fontSize: 20)),
                               foregroundColor:
                                   MaterialStateProperty.all(Colors.white),
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.blue)),
-                          child: Text("login"),
+                          child: const Text("login"),
                         ),
                       )
                     ],

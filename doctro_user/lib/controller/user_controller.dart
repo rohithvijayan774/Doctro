@@ -6,7 +6,6 @@ import 'package:doctro_user/views/more_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 class UserController extends ChangeNotifier {
@@ -150,7 +149,6 @@ class UserController extends ChangeNotifier {
             userAddress: snapshot['userAddress'],
             userGender: snapshot['userGender']);
         _userid = userModel.userid;
-        final ggg = TextEditingController(text: userModel.userName);
         updateNameController.text = userModel.userName;
         updateDOBController.text = userModel.userDOB;
         updateNumberController.text = userModel.userNumber.toString();
@@ -161,6 +159,21 @@ class UserController extends ChangeNotifier {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Fetching Data Failed : $e')));
     }
+  }
+
+  Future forgotPassword(
+    TextEditingController userEmailController,
+    context,
+  ) async {
+    await firebaseAuth.sendPasswordResetEmail(email: userEmailController.text);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+        (route) => false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text('Password reset mail send to ${userEmailController.text}')));
   }
 
   final updateProKey = GlobalKey<FormState>();

@@ -1,6 +1,7 @@
 import 'package:admin/controller/admin_controller.dart';
 import 'package:admin/views/Navigation.dart';
 import 'package:admin/views/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,20 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(useMaterial3: true),
-        home: const LoginPage(),
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (FirebaseAuth.instance.currentUser!.uid ==
+                    'rhI5kx8KWPSUvRMfjfcIik1HhSm2') {
+                  return const NavBar();
+                } else {
+                  return const LoginPage();
+                }
+              } else {
+                return const LoginPage();
+              }
+            }),
       ),
     );
   }

@@ -29,7 +29,7 @@ class EditProfile extends StatelessWidget {
                   onTap: () {
                     addDoctController.selectProPic().then((value) =>
                         addDoctController.uploadPropic(
-                            '${addDoctController.doctorModel.doctorName} ${addDoctController.doctorModel.doctorid}',
+                            addDoctController.doctorModel.doctorid,
                             addDoctController.pickProPic!));
                   },
                   child: CircleAvatar(

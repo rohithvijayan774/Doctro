@@ -222,26 +222,36 @@ class EnterDrDetails extends StatelessWidget {
                       child: TextButton(
                         onPressed: () {
                           if (enterKey.currentState!.validate()) {
-                            addDoctController
-                                .registerDoctor(
-                                    addDoctController.doctorNameController.text,
-                                    addDoctController
-                                        .doctorEmailController.text,
-                                    addDoctController
-                                        .doctorPasswordController.text,
-                                    addDoctController
-                                        .doctorDepartmentController.text,
-                                    int.parse(addDoctController
-                                        .doctorAgeController.text),
-                                    addDoctController
-                                        .doctorAddressController.text,
-                                    addDoctController
-                                        .doctorDescriptionController.text,
-                                    context)
-                                .then((value) => addDoctController.uploadPropic(
-                                    '${addDoctController.doctorModel.doctorName} ${addDoctController.doctorModel.doctorid}',
-                                    addDoctController.pickProPic!))
-                                .then((value) => Navigator.of(context).pop());
+                            if (addDoctController.pickProPic != null) {
+                              addDoctController
+                                  .registerDoctor(
+                                      addDoctController
+                                          .doctorNameController.text,
+                                      addDoctController
+                                          .doctorEmailController.text,
+                                      addDoctController
+                                          .doctorPasswordController.text,
+                                      addDoctController
+                                          .doctorDepartmentController.text,
+                                      int.parse(addDoctController
+                                          .doctorAgeController.text),
+                                      addDoctController
+                                          .doctorAddressController.text,
+                                      addDoctController
+                                          .doctorDescriptionController.text,
+                                      context)
+                                  .then((value) =>
+                                      addDoctController.uploadPropic(
+                                          addDoctController
+                                              .doctorModel.doctorid,
+                                          addDoctController.pickProPic!))
+                                  .then((value) => Navigator.of(context).pop());
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Choose Profile Pic')));
+                            }
+
                             // Navigator.of(context).pushAndRemoveUntil(
                             //     MaterialPageRoute(
                             //       builder: (context) => const NavBar(),

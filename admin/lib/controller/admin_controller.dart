@@ -12,6 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AdminController extends ChangeNotifier {
+  List hospitalADList = [
+    'images/hospital_image.jpg',
+    'images/slider_1.jpg',
+    'images/slider_2.jpg',
+    'images/Slider_4.webp',
+  ];
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
@@ -148,6 +154,7 @@ class AdminController extends ChangeNotifier {
 
   Future fetchDoctors(context) async {
     try {
+      print('//////////Fetching Doctors');
       doctorsList.clear();
       CollectionReference doctorsRef = firebaseFirestore.collection('doctors');
       QuerySnapshot doctorsSnapshot = await doctorsRef.get();
@@ -217,12 +224,17 @@ class AdminController extends ChangeNotifier {
       await docRef.update({'doctorProPic': value});
     });
     _doctorModel = doctorModel;
-    notifyListeners();
   }
 
-  Future<void> deleteDoctor(String doctorID) async {
-    try {} catch (e) {
-      print(e);
+  Future<void> deleteDoctor(String doctorID, context) async {
+    try {
+      await firebaseFirestore.collection('doctors').doc(doctorID).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Doctor Deleted Successfully')));
+      notifyListeners();
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Deleting Doctor failed : $e')));
     }
   }
 }

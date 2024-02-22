@@ -17,7 +17,7 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     List pages = [
      const PatientList1(),
-      DoctorList(),
+      const DoctorList(),
     const  HospitalProfile(),
     ];
 
@@ -33,16 +33,16 @@ class _NavBarState extends State<NavBar> {
         },
         items: [
           FlashyTabBarItem(
-            icon: Icon(Icons.format_list_bulleted_sharp),
-            title: Text('Patient List'),
+            icon: const Icon(Icons.format_list_bulleted_sharp),
+            title: const Text('Patient List'),
           ),
           FlashyTabBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: const Icon(Icons.home),
+            title: const Text('Home'),
           ),
           FlashyTabBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Profile'),
+            icon: const Icon(Icons.person),
+            title: const Text('Profile'),
           ),
         ],
       ),

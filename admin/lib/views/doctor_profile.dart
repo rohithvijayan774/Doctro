@@ -1,16 +1,23 @@
+import 'package:admin/controller/admin_controller.dart';
 import 'package:admin/views/doctor_list.dart';
+import 'package:admin/views/hospital_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DoctorProfile extends StatelessWidget {
+  final String drID;
   final String drName;
   final int drAge;
   final String drDepartment;
   final String drDescription;
+  final String drEmail;
   const DoctorProfile({
+    required this.drID,
     required this.drName,
     required this.drAge,
     required this.drDepartment,
     required this.drDescription,
+    required this.drEmail,
     super.key,
   });
 
@@ -18,6 +25,7 @@ class DoctorProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final hieght = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    print(drEmail);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -94,18 +102,23 @@ class DoctorProfile extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(MaterialPageRoute(
-                                builder: (context) => DoctorList()));
-                          },
-                          child: Text(
-                            "Delete",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 233, 28, 9),
-                              minimumSize: Size(234, 48))),
+                      child: Consumer<AdminController>(
+                          builder: (context, drProfileController, _) {
+                        return ElevatedButton(
+                            onPressed: () {
+                              drProfileController
+                                  .deleteDoctor(drID, context)
+                                  .then((value) => Navigator.of(context).pop());
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 233, 28, 9),
+                                minimumSize: const Size(234, 48)),
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.white),
+                            ));
+                      }),
                     )
                   ],
                 ),
