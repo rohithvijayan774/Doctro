@@ -1,5 +1,5 @@
-import 'package:doctro_doctor/pages/Dr_profile.dart';
-import 'package:doctro_doctor/pages/booked_patients.dart';
+import 'package:doctro_doctor/view/Dr_profile.dart';
+import 'package:doctro_doctor/view/booked_patients.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     List pages = [
       // NotiFication(),
-      booked_patients(),
+      const booked_patients(),
       const DrProfile(),
     ];
 

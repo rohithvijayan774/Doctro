@@ -1,7 +1,9 @@
 import 'dart:developer';
 
-import 'package:doctro_doctor/pages/Navigation.dart';
+import 'package:doctro_doctor/controller/doctor_controller.dart';
+import 'package:doctro_doctor/view/Navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -9,6 +11,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginKey = GlobalKey<FormState>();
+    final loginController =
+        Provider.of<DoctorController>(context, listen: false);
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -30,12 +34,13 @@ class LoginPage extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Text("HI! Welcome, Enter your login details"),
+                      const Text("Hi! Welcome, Enter your login details"),
                       // Text("Email"),
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 50, left: 22, right: 22),
                         child: TextFormField(
+                          controller: loginController.usernameController,
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
@@ -62,6 +67,7 @@ class LoginPage extends StatelessWidget {
                         padding:
                             const EdgeInsets.only(top: 30, left: 22, right: 22),
                         child: TextFormField(
+                          controller: loginController.userPassController,
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
@@ -90,16 +96,17 @@ class LoginPage extends StatelessWidget {
                           onPressed: () {
                             if (loginKey.currentState!.validate()) {
                               log("validated");
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const NavBar(),
-                              ));
+                              loginController.doctorLogin(
+                                  loginController.usernameController.text,
+                                  loginController.userPassController.text,
+                                  context);
                             } else {
                               log("not validate");
                             }
                           },
                           style: ButtonStyle(
-                              minimumSize:
-                                  MaterialStateProperty.all(const Size(300, 50)),
+                              minimumSize: MaterialStateProperty.all(
+                                  const Size(300, 50)),
                               textStyle: MaterialStateProperty.all(
                                   const TextStyle(fontSize: 20)),
                               foregroundColor:
