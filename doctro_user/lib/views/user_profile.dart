@@ -150,7 +150,13 @@ class UserProfile extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             child: InkWell(
                               onTap: () {
-                                print('on tap');
+                                userProfileController
+                                    .selectProPic()
+                                    .whenComplete(() =>
+                                        userProfileController.uploadPropic(
+                                            userProfileController
+                                                .userModel.userid,
+                                            userProfileController.pickProPic!));
                               },
                               child: Container(
                                 height: hieght * .15,
@@ -170,6 +176,7 @@ class UserProfile extends StatelessWidget {
                                             'https://img.freepik.com/free-photo/view-happy-3d-man-using-tablet_23-2150709864.jpg?size=626&ext=jpg&ga=GA1.1.1811490750.1705252568&semt=sph')
                                         : NetworkImage(userProfileController
                                             .userModel.userProPic!),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),

@@ -1,4 +1,6 @@
+import 'package:doctro_user/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookDetails extends StatefulWidget {
   final String drName;
@@ -36,75 +38,22 @@ class _BookDetailsState extends State<BookDetails> {
             ),
           ),
         ),
-        body: Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 25),
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    // boxShadow:,
-                    color: Color.fromARGB(91, 137, 202, 255),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  height: hieght * .15,
-                  width: width * .9,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              'https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small/an-indian-young-female-doctor-isolated-on-green-ai-generated-photo.jpg'),
-                          radius: 40,
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Title(color: Colors.black, child: Text("Doctor name")),
-                                  // Title(color: Colors.black, child: Text("Date")),
-                                  // Title(color: Colors.black, child: Text("Time slot")),
-                                  Text(widget.drName),
-                                  Text(widget.date),
-                                  Text(widget.time),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 230),
-                  child: TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(110, 40)),
-                          textStyle: MaterialStateProperty.all(
-                              const TextStyle(fontSize: 20)),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 23, 127, 213)),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(45)))),
-                      child: const Text("Cancel")),
-                ),
-              ],
-            ),
-          ),
-        ));
+        body: Consumer<UserController>(builder: (context, bookControl, _) {
+          return FutureBuilder(
+              future: bookControl.fetchBookings(),
+              builder: (context, snapshot) {
+                return ListView.builder(
+                  itemCount: bookControl.bookingsList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const CircleAvatar(),
+                      title: Text(bookControl.bookingsList[index].doctorName),
+                      subtitle:
+                          Text(bookControl.bookingsList[index].bookingTime),
+                    );
+                  },
+                );
+              });
+        }));
   }
 }
