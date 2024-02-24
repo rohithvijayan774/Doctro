@@ -19,7 +19,8 @@ class BookingPage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final hieght = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    // final bookingController = Provider.of<UserController>(context);
+    final bookingController = Provider.of<UserController>(context);
+    bookingController.init(doctors.doctorid, doctors.doctorName);
     // bookingController.init(doctors.doctorid);
     // bool isLiked = bookingController.isLiked(widget.doctors.doctorid);
     return Scaffold(
@@ -35,8 +36,9 @@ class BookingPage2 extends StatelessWidget {
       ),
       body: Consumer<UserController>(builder: (context, bookingController, _) {
         return FutureBuilder(
-            future: bookingController.fetch(doctors.doctorid).then((value) =>
-                bookingController.init(doctors.doctorid, doctors.doctorName)),
+            future: bookingController
+                .init(doctors.doctorid, doctors.doctorName)
+                .then((value) => bookingController.fetch(doctors.doctorid)),
             builder: (context, snapshot) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,

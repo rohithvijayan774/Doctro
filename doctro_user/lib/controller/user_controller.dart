@@ -368,7 +368,7 @@ class UserController extends ChangeNotifier {
     return converted;
   }
 
-  init(String doctorid, String doctorName) async {
+  Future init(String doctorid, String doctorName) async {
     mockBookingService = BookingService(
         userId: firebaseAuth.currentUser!.uid,
         userName: userModel.userName,
@@ -408,6 +408,7 @@ class UserController extends ChangeNotifier {
       bookingEndTime: newBooking.bookingEnd.toString(),
       doctorName: newBooking.serviceName.toString(),
     );
+    print('////////////${newBooking.serviceId}');
     await firebaseFirestore
         .collection('doctors')
         .doc(newBooking.serviceId)
@@ -455,6 +456,7 @@ class UserController extends ChangeNotifier {
   Future fetchBookings() async {
     try {
       bookingsList.clear();
+      converted.clear();
       CollectionReference userssRef = firebaseFirestore
           .collection('users')
           .doc(firebaseAuth.currentUser!.uid)
