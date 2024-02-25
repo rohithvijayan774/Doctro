@@ -1,5 +1,7 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:doctro_user/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BookDetails extends StatefulWidget {
@@ -42,17 +44,91 @@ class _BookDetailsState extends State<BookDetails> {
           return FutureBuilder(
               future: bookControl.fetchBookings(),
               builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: bookControl.bookingsList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: const CircleAvatar(),
-                      title: Text(bookControl.bookingsList[index].doctorName),
-                      subtitle:
-                          Text(bookControl.bookingsList[index].bookingTime),
-                    );
-                  },
-                );
+                return snapshot.connectionState == ConnectionState.waiting
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : bookControl.bookingsList.isEmpty
+                        ? const Center(
+                            child: Text('No Bookings Found'),
+                          )
+                        : ListView.builder(
+                            itemCount: bookControl.bookingsList.length,
+                            itemBuilder: (context, index) {
+                              String formatttedDate = DateFormat('dd-MM-yy')
+                                  .format(DateTime.parse(bookControl
+                                      .bookingsList[index].bookingTime));
+                              String formatttedTime = DateFormat('jm').format(
+                                  DateTime.parse(bookControl
+                                      .bookingsList[index].bookingTime));
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Card(
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(bookControl
+                                          .bookingsList[index].doctorProPic),
+                                    ),
+                                    title: Text(
+                                      bookControl
+                                          .bookingsList[index].doctorName,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    subtitle: Text(
+                                        '$formatttedDate • $formatttedTime'),
+                                    trailing: TextButton(
+                                      onPressed: () {
+                                        //cool alert box (cool_alert: ^2.0.1)
+                                        CoolAlert.show(
+                                            onConfirmBtnTap: () {
+                                              bookControl
+                                                  .deleteBooking(
+                                                      'users',
+                                                      bookControl.firebaseAuth
+                                                          .currentUser!.uid,
+                                                      bookControl
+                                                          .bookingsList[index]
+                                                          .bookingid)
+                                                  .then(
+                                                    (value) => bookControl
+                                                        .deleteBooking(
+                                                      'doctors',
+                                                      bookControl
+                                                          .bookingsList[index]
+                                                          .doctorid,
+                                                      bookControl
+                                                          .bookingsList[index]
+                                                          .bookingid,
+                                                    ),
+                                                  );
+                                            },
+                                            context: context,
+                                            type: CoolAlertType.confirm,
+                                            text:
+                                                "You want to cancel the Booking",
+                                            widget: TextFormField(
+                                              decoration: const InputDecoration(
+                                                hintText:
+                                                    "please enter the reason",
+                                              ),
+                                            ));
+                                        //cool alert box end!!
+                                      },
+                                      style: ButtonStyle(
+                                          foregroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.red)),
+                                      child: const Text("cancel"),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
               });
         }));
   }

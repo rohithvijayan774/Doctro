@@ -7,7 +7,6 @@ import 'package:doctro_user/model/booking_model.dart';
 import 'package:doctro_user/model/doctor_model.dart';
 import 'package:doctro_user/model/user_model.dart';
 import 'package:doctro_user/views/Navigation.dart';
-import 'package:doctro_user/views/booked_details.dart';
 import 'package:doctro_user/views/login_page.dart';
 import 'package:doctro_user/views/more_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -347,11 +346,6 @@ class UserController extends ChangeNotifier {
     //     .toList();
     // converted.add(convertedBookings);
 
-    DateTime first = now;
-    DateTime tomorrow = now.add(const Duration(days: 1));
-    DateTime second = now.add(const Duration(minutes: 55));
-    DateTime third = now.subtract(const Duration(minutes: 240));
-    DateTime fourth = now.subtract(const Duration(minutes: 500));
     // converted.add(
     //     DateTimeRange(start: first, end: now.add(const Duration(minutes: 30))));
     // converted.add(DateTimeRange(
@@ -368,10 +362,17 @@ class UserController extends ChangeNotifier {
     return converted;
   }
 
-  Future init(String doctorid, String doctorName) async {
+  Future init(
+    String doctorid,
+    String doctorName,
+    String doctorProPic,
+    String patientProPic,
+  ) async {
     mockBookingService = BookingService(
         userId: firebaseAuth.currentUser!.uid,
+        userPhoneNumber: patientProPic,
         userName: userModel.userName,
+        userEmail: doctorProPic,
         serviceId: doctorid,
         serviceName: doctorName,
         serviceDuration: 30,
@@ -407,6 +408,10 @@ class UserController extends ChangeNotifier {
       bookingTime: newBooking.bookingStart.toString(),
       bookingEndTime: newBooking.bookingEnd.toString(),
       doctorName: newBooking.serviceName.toString(),
+      doctorProPic: newBooking.userEmail.toString(),
+      patientProPic: newBooking.userPhoneNumber.toString(),
+      doctorid: newBooking.serviceId.toString(),
+      userid: newBooking.userId.toString(),
     );
     print('////////////${newBooking.serviceId}');
     await firebaseFirestore
@@ -439,8 +444,8 @@ class UserController extends ChangeNotifier {
     String formatttedDate =
         DateFormat('dd-MM-yy').format(newBooking.bookingStart);
 
-    String formatttedTime = DateFormat('jm').format(newBooking.bookingStart);
     print('////////////$formatttedDate/////////');
+    notifyListeners();
   }
 
   List<DateTimeRange> generatePauseSlots() {
@@ -468,6 +473,10 @@ class UserController extends ChangeNotifier {
         String bookingTime = doc['bookingTime'];
         String bookingEndTime = doc['bookingEndTime'];
         String doctorName = doc['doctorName'];
+        String doctorProPic = doc['doctorProPic'];
+        String patientProPic = doc['patientProPic'];
+        String doctorid = doc['doctorid'];
+        String userid = doc['userid'];
 
         booking = BookingModel(
           bookingid: bookingid,
@@ -475,6 +484,10 @@ class UserController extends ChangeNotifier {
           bookingTime: bookingTime,
           bookingEndTime: bookingEndTime,
           doctorName: doctorName,
+          doctorProPic: doctorProPic,
+          patientProPic: patientProPic,
+          doctorid: doctorid,
+          userid: userid,
         );
 
         bookingsList.add(booking!);
@@ -500,6 +513,10 @@ class UserController extends ChangeNotifier {
         String bookingTime = doc['bookingTime'];
         String bookingEndTime = doc['bookingEndTime'];
         String doctorName = doc['doctorName'];
+        String doctorProPic = doc['doctorProPic'];
+        String patientProPic = doc['patientProPic'];
+        String doctorid = doc['doctorid'];
+        String userid = doc['userid'];
 
         booking = BookingModel(
           bookingid: bookingid,
@@ -507,6 +524,10 @@ class UserController extends ChangeNotifier {
           bookingTime: bookingTime,
           bookingEndTime: bookingEndTime,
           doctorName: doctorName,
+          doctorProPic: doctorProPic,
+          patientProPic: patientProPic,
+          doctorid: doctorid,
+          userid: userid,
         );
 
         bookingsList.add(booking!);
@@ -516,6 +537,24 @@ class UserController extends ChangeNotifier {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future deleteBooking(
+    String collectionName,
+    String docId,
+    String bookid,
+  ) async {
+    try {
+      await firebaseFirestore
+          .collection(collectionName)
+          .doc(docId)
+          .collection('bookings')
+          .doc(bookid)
+          .delete();
+      notifyListeners();
+    } catch (e) {
+      print('Delete Failed : $e');
     }
   }
 }

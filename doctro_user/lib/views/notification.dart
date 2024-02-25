@@ -34,9 +34,9 @@ class _NotiFicationState extends State<NotiFication> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        title: Text(
+        title: const Text(
           'Notification',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -50,6 +50,12 @@ class _NotiFicationState extends State<NotiFication> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Container(
+                  height: hieght * .2,
+                  width: width * .9,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color.fromARGB(34, 42, 133, 244),
+                  ),
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 10, left: 20, right: 40),
@@ -59,7 +65,7 @@ class _NotiFicationState extends State<NotiFication> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             widget.doctorsNmae[index],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                         ),
@@ -80,12 +86,6 @@ class _NotiFicationState extends State<NotiFication> {
                         )
                       ],
                     ),
-                  ),
-                  height: hieght * .2,
-                  width: width * .9,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(34, 42, 133, 244),
                   ),
                 ),
               ),

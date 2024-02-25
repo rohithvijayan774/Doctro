@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctro_doctor/model/booking_model.dart';
 import 'package:doctro_doctor/model/doctor_model.dart';
 import 'package:doctro_doctor/view/Dr_profile.dart';
 import 'package:doctro_doctor/view/Navigation.dart';
@@ -146,6 +147,66 @@ class DoctorController extends ChangeNotifier {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Updating Failed : $e')));
+    }
+  }
+
+  List<BookingModel> bookingsList = [];
+  BookingModel? booking;
+
+  Future fetchPatients() async {
+    try {
+      bookingsList.clear();
+
+      CollectionReference userssRef = firebaseFirestore
+          .collection('doctors')
+          .doc(firebaseAuth.currentUser!.uid)
+          .collection('bookings');
+      QuerySnapshot usersSnapshot = await userssRef.get();
+      for (var doc in usersSnapshot.docs) {
+        String bookingid = doc['bookingid'];
+        String patientName = doc['patientName'];
+        String bookingTime = doc['bookingTime'];
+        String bookingEndTime = doc['bookingEndTime'];
+        String doctorName = doc['doctorName'];
+        String doctorProPic = doc['doctorProPic'];
+        String patientProPic = doc['patientProPic'];
+        String doctorid = doc['doctorid'];
+        String userid = doc['userid'];
+
+        booking = BookingModel(
+          bookingid: bookingid,
+          patientName: patientName,
+          bookingTime: bookingTime,
+          bookingEndTime: bookingEndTime,
+          doctorName: doctorName,
+          doctorProPic: doctorProPic,
+          patientProPic: patientProPic,
+          doctorid: doctorid,
+          userid: userid,
+        );
+
+        bookingsList.add(booking!);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future deleteBooking(
+    String collectionName,
+    String docId,
+    String bookid,
+  ) async {
+    try {
+      await firebaseFirestore
+          .collection(collectionName)
+          .doc(docId)
+          .collection('bookings')
+          .doc(bookid)
+          .delete();
+      notifyListeners();
+    } catch (e) {
+      print('Delete Failed : $e');
     }
   }
 }

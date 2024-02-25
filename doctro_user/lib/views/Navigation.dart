@@ -17,8 +17,8 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     List pages = [
       const BookDetails(date: '', drName: '', time: ''),
-      UserHome(),
-      UserProfile(),
+      const UserHome(),
+      const UserProfile(),
     ];
 
     return Scaffold(
@@ -33,16 +33,16 @@ class _NavBarState extends State<NavBar> {
         },
         items: [
           FlashyTabBarItem(
-            icon: Icon(Icons.event),
-            title: Text('Booked Details'),
+            icon: const Icon(Icons.event),
+            title: const Text('Booked Details'),
           ),
           FlashyTabBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: const Icon(Icons.home),
+            title: const Text('Home'),
           ),
           FlashyTabBarItem(
-            icon: Icon(Icons.person),
-            title: Text('Profile'),
+            icon: const Icon(Icons.person),
+            title: const Text('Profile'),
           ),
         ],
       ),

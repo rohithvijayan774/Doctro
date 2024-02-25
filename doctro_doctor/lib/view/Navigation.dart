@@ -16,7 +16,7 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     List pages = [
       // NotiFication(),
-      const booked_patients(),
+      const BookedPatients(),
       const DrProfile(),
     ];
 
