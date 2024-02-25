@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:admin/model/booking_model.dart';
 import 'package:admin/model/doctor_model.dart';
 import 'package:admin/model/user_model.dart';
 import 'package:admin/views/Navigation.dart';
@@ -226,9 +227,85 @@ class AdminController extends ChangeNotifier {
     _doctorModel = doctorModel;
   }
 
+  // BookingModel? _bookingModel;
+  // BookingModel get bookingModel => _bookingModel!;
+
+  List<BookingModel> bookingsList = [];
+  BookingModel? booking;
+  Future fetchBookingsFromPatient() async {
+    try {
+      bookingsList.clear();
+      CollectionReference userssRef = firebaseFirestore
+          .collection('users')
+          .doc(firebaseAuth.currentUser!.uid)
+          .collection('bookings');
+      QuerySnapshot usersSnapshot = await userssRef.get();
+      for (var doc in usersSnapshot.docs) {
+        String bookingid = doc['bookingid'];
+        String patientName = doc['patientName'];
+        String bookingTime = doc['bookingTime'];
+        String bookingEndTime = doc['bookingEndTime'];
+        String doctorName = doc['doctorName'];
+        String doctorProPic = doc['doctorProPic'];
+        String patientProPic = doc['patientProPic'];
+        String doctorid = doc['doctorid'];
+        String userid = doc['userid'];
+
+        booking = BookingModel(
+          bookingid: bookingid,
+          patientName: patientName,
+          bookingTime: bookingTime,
+          bookingEndTime: bookingEndTime,
+          doctorName: doctorName,
+          doctorProPic: doctorProPic,
+          patientProPic: patientProPic,
+          doctorid: doctorid,
+          userid: userid,
+        );
+
+        bookingsList.add(booking!);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> deleteDoctor(String doctorID, context) async {
     try {
+      // delete doctor bookings collection
+      final CollectionReference colletionRef = firebaseFirestore
+          .collection('doctors')
+          .doc(doctorID)
+          .collection('bookings');
+      final QuerySnapshot querySnapshot = await colletionRef.get();
+      final List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+
+      for (var document in documents) {
+        await document.reference.delete();
+      }
+      //delete doctor collection
       await firebaseFirestore.collection('doctors').doc(doctorID).delete();
+
+      //delete bookings from patient
+
+      final QuerySnapshot usersSnapsot =
+          await firebaseFirestore.collection('users').get();
+      final List<QueryDocumentSnapshot> users = usersSnapsot.docs;
+
+      for (var userDoc in users) {
+        final String userId = userDoc.id;
+
+        final QuerySnapshot bookingSnapshot = await userDoc.reference
+            .collection('bookings')
+            .where('doctorid', isEqualTo: doctorID)
+            .get();
+        final List<QueryDocumentSnapshot> bookings = bookingSnapshot.docs;
+
+        for (var bookingsDoc in bookings) {
+          await bookingsDoc.reference.delete();
+        }
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Doctor Deleted Successfully')));
       notifyListeners();

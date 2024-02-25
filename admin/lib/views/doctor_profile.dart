@@ -25,6 +25,7 @@ class DoctorProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final hieght = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final bookingCntrl = Provider.of<AdminController>(context, listen: false);
     print(drEmail);
     return Scaffold(
       appBar: AppBar(
@@ -33,100 +34,114 @@ class DoctorProfile extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: SizedBox(
-                height: 218,
-                width: 219,
-                child: Image.asset(
-                  'images/Doctors.png',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Container(
-                width: width * 1,
-                height: hieght * .56,
-                decoration: const ShapeDecoration(
-                  color: Color.fromARGB(42, 146, 186, 214),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
+      body: FutureBuilder(
+          future: bookingCntrl.fetchBookingsFromPatient(),
+          builder: (context, snapshot) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: 218,
+                      width: 219,
+                      child: Image.asset(
+                        'images/Doctors.png',
+                      ),
                     ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20, bottom: 10),
-                          child: Text(
-                            "Dr. $drName",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Container(
+                      width: width * 1,
+                      height: hieght * .56,
+                      decoration: const ShapeDecoration(
+                        color: Color.fromARGB(42, 146, 186, 214),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, bottom: 5),
-                        child: Text(
-                          "Age: $drAge",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 50),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, bottom: 10),
+                                child: Text(
+                                  "Dr. $drName",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, bottom: 5),
+                              child: Text(
+                                "Age: $drAge",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, bottom: 5),
+                              child: Text(
+                                "Department: $drDepartment",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(drDescription),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Consumer<AdminController>(
+                                builder: (context, drProfileController, _) {
+                              return ElevatedButton(
+                                  onPressed: () {
+                                    drProfileController
+                                        .deleteDoctor(
+                                          drID,
+                                          context,
+                                        )
+                                        .then((value) =>
+                                            Navigator.of(context).pop());
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 233, 28, 9),
+                                      minimumSize: const Size(234, 48)),
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ));
+                            }),
+                          )
+                        ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, bottom: 5),
-                        child: Text(
-                          "Department: $drDepartment",
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(drDescription),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Consumer<AdminController>(
-                          builder: (context, drProfileController, _) {
-                        return ElevatedButton(
-                            onPressed: () {
-                              drProfileController
-                                  .deleteDoctor(drID, context)
-                                  .then((value) => Navigator.of(context).pop());
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 233, 28, 9),
-                                minimumSize: const Size(234, 48)),
-                            child: const Text(
-                              "Delete",
-                              style: TextStyle(color: Colors.white),
-                            ));
-                      }),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }

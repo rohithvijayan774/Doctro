@@ -46,9 +46,14 @@ class PatientList1 extends StatelessWidget {
                                   subtitle: Text(patientController
                                       .usersList[index].userNumber
                                       .toString()),
-                                  leading: const CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhb_tTLAas4h8fw7zHFEm1y4iLqUtGtiMpai0NNBRH2KCOQaW3BHMpbdO0OesMtxgtY2A&usqp=CAU'),
+                                  leading: CircleAvatar(
+                                    backgroundImage: patientController
+                                                .usersList[index].userProPic ==
+                                            null
+                                        ? const NetworkImage(
+                                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhb_tTLAas4h8fw7zHFEm1y4iLqUtGtiMpai0NNBRH2KCOQaW3BHMpbdO0OesMtxgtY2A&usqp=CAU')
+                                        : NetworkImage(patientController
+                                            .usersList[index].userProPic!),
                                     radius: 25,
                                   ),
                                 ),
